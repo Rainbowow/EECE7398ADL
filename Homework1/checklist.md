@@ -13,4 +13,4 @@ Last edit 02/13/2021
 - [ ] comment code
 - [ ] figure out the tensor figure in preprocess
 - [ ] modularize whole project
-
+- [ ] add parameters to all functions
