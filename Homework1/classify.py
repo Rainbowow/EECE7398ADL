@@ -2,7 +2,7 @@
 '''
 Author: Minghao Chen
 Date: 2021-02-08 17:40:52
-LastEditTime: 2021-02-14 15:56:12
+LastEditTime: 2021-02-14 15:58:56
 LastEditors: Please set LastEditors
 Description: EECE7398 Homework1: train a classifier
 FilePath: \EECE7398ADL\Homework1\Homework1.py
@@ -93,11 +93,11 @@ def train(EPOCH,trainloader):
 
     print('train finished')
          
-def test(model):
+def test(model,dataloader):
     correct = 0
     total = 0
     with torch.no_grad():
-        for data in testloader:
+        for data in dataloader:
             images, labels = data
             outputs = model(images)
             _, predicted = torch.max(outputs.data, 1)
