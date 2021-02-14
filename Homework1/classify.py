@@ -2,7 +2,7 @@
 '''
 Author: Minghao Chen
 Date: 2021-02-08 17:40:52
-LastEditTime: 2021-02-13 05:28:02
+LastEditTime: 2021-02-14 15:56:12
 LastEditors: Please set LastEditors
 Description: EECE7398 Homework1: train a classifier
 FilePath: \EECE7398ADL\Homework1\Homework1.py
@@ -21,9 +21,9 @@ import sys
 #hyper parameters
 PATH = './model/cifar_net.pth'
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-BATCH_SIZE=16
-
-def preprocessing():
+BATCH_SIZE=64
+EPOCH=10
+def preprocessing(train_test):
     '''
     description: preprocessing the cifar-10 dataset
     param {*}
@@ -31,31 +31,29 @@ def preprocessing():
     '''
     transform = transforms.Compose(
         [transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]) #C*H*W
+    if train_test=="train":
+        set = torchvision.datasets.CIFAR10(root='./data', train=True,
+                                                download=FALSE, transform=transform)
+        loader = torch.utils.data.DataLoader(set, batch_size=BATCH_SIZE,
+                                                shuffle=True, num_workers=0)
+    if train_test=="test":
+        set = torchvision.datasets.CIFAR10(root='./data', train=False,
+                                            download=True, transform=transform)
+        loader = torch.utils.data.DataLoader(set, batch_size=BATCH_SIZE,
+                                                shuffle=False, num_workers=0)
 
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                            download=FALSE, transform=transform)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE,
-                                            shuffle=True, num_workers=0)
+    return loader
 
-    testset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                        download=True, transform=transform)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE,
-                                            shuffle=False, num_workers=0)
-
-    return trainloader,testloader
-
-trainloader,testloader=preprocessing()
-
-def train():
+def train(EPOCH,trainloader):
     
     model=Net()
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     #training
-    print_format="{0:<6}{1:<12.4f}{2:<12.4f}{3:<11.4f}{4:<10.4f}"
-    for epoch in range(2):  # loop over the dataset multiple times
+    print_format="{0:<6}{1:<12.4f}{2:<12.4f}{3:<11.4f}{4:<10.4f}" #format accuracy output
+    for epoch in range(EPOCH):  # loop over the dataset multiple times
 
         running_loss = 0.0
         best_loss=10000
@@ -110,10 +108,10 @@ def test(model):
         100 * correct / total))
     return 100 * correct / total
 
-def validate():
+def validate(dataloader):
     model = Net()
     model.load_state_dict(torch.load(PATH))
-    dataiter = iter(testloader)
+    dataiter = iter(dataloader)
     images, labels = dataiter.next()
     outputs = model(images)
     _, predicted = torch.max(outputs, 1)
@@ -122,9 +120,11 @@ def validate():
 
 def main():
     if sys.argv[1]=='train':
-        train()
+        trainloader=preprocessing("train")
+        train(EPOCH=EPOCH,trainloader=trainloader)
     elif sys.argv[1]=='test':
-        validate()
+        testloader=preprocessing("test")
+        validate(testloader)
     else:
         print('wrong parameter')
 
