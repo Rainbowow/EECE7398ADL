@@ -2,7 +2,7 @@
 '''
 Author: Minghao Chen
 Date: 2021-02-08 17:40:52
-LastEditTime: 2021-02-14 15:58:56
+LastEditTime: 2021-02-14 16:16:03
 LastEditors: Please set LastEditors
 Description: EECE7398 Homework1: train a classifier
 FilePath: \EECE7398ADL\Homework1\Homework1.py
@@ -45,7 +45,7 @@ def preprocessing(train_test):
 
     return loader
 
-def train(EPOCH,trainloader):
+def train(EPOCH,trainloader,testloader):
     
     model=Net()
     criterion = nn.CrossEntropyLoss()
@@ -70,20 +70,29 @@ def train(EPOCH,trainloader):
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
-            #train statisctics
             
             #test statisctics
-            
+                        
             # print statistics
-            
+                        
             running_loss += loss.item()
             if i==0:
                 print('Loop ','Train Loss ','Train Acc% ','Test Loss ','Test Acc%')
             if i % 2000 == 1999:    # print every 2000 mini-batches
+                #train statisctics
+                correct = 0
+                total = 0
+                with torch.no_grad():
+                    for data in testloader:
+                        images, labels = data
+                        test_outputs = model(images)
+                        _, predicted = torch.max(test_outputs.data, 1)
+                        total += labels.size(0)
+                        correct += (predicted == labels).sum().item()
 
                 acc=test(model)
                 
-                print(print_format.format(str(epoch + 1)+"/10", 1,1,1, running_loss / 2000))
+                print(print_format.format(str(epoch + 1), running_loss / 2000,100*correct/total,1, ))
                 
                 if running_loss<best_loss & acc>best_acc:
                     best_acc=acc
@@ -121,7 +130,8 @@ def validate(dataloader):
 def main():
     if sys.argv[1]=='train':
         trainloader=preprocessing("train")
-        train(EPOCH=EPOCH,trainloader=trainloader)
+        testloader=preprocessing("test")
+        train(EPOCH=EPOCH,trainloader=trainloader,testloader=testloader)
     elif sys.argv[1]=='test':
         testloader=preprocessing("test")
         validate(testloader)
