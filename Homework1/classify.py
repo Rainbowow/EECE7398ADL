@@ -2,7 +2,7 @@
 '''
 Author: Minghao Chen
 Date: 2021-02-08 17:40:52
-LastEditTime: 2021-02-14 16:16:03
+LastEditTime: 2021-02-17 20:34:33
 LastEditors: Please set LastEditors
 Description: EECE7398 Homework1: train a classifier
 FilePath: \EECE7398ADL\Homework1\Homework1.py
@@ -19,7 +19,7 @@ import torch.optim as optim
 import sys
 
 #hyper parameters
-PATH = './model/cifar_net.pth'
+PATH = './model/cifar_net_LR_0.01.pth'
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 BATCH_SIZE=64
 EPOCH=10
@@ -39,17 +39,17 @@ def preprocessing(train_test):
                                                 shuffle=True, num_workers=0)
     if train_test=="test":
         set = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                            download=True, transform=transform)
+                                            download=FALSE, transform=transform)
         loader = torch.utils.data.DataLoader(set, batch_size=BATCH_SIZE,
                                                 shuffle=False, num_workers=0)
 
     return loader
 
-def train(EPOCH,trainloader,testloader):
+def train(EPOCH,trainloader,testloader,LR):
     
     model=Net()
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=LR)
 
     #training
     print_format="{0:<6}{1:<12.4f}{2:<12.4f}{3:<11.4f}{4:<10.4f}" #format accuracy output
@@ -78,7 +78,7 @@ def train(EPOCH,trainloader,testloader):
             running_loss += loss.item()
             if i==0:
                 print('Loop ','Train Loss ','Train Acc% ','Test Loss ','Test Acc%')
-            if i % 2000 == 1999:    # print every 2000 mini-batches
+            if i % 200 == 199:    # print every 200 mini-batches
                 #train statisctics
                 correct = 0
                 total = 0
@@ -90,11 +90,12 @@ def train(EPOCH,trainloader,testloader):
                         total += labels.size(0)
                         correct += (predicted == labels).sum().item()
 
-                acc=test(model)
+                #acc=test(model)
+                acc=100 * correct / total
                 
-                print(print_format.format(str(epoch + 1), running_loss / 2000,100*correct/total,1, ))
+                print(print_format.format(str(epoch + 1), running_loss / 200,1,1,100*correct/total ))
                 
-                if running_loss<best_loss & acc>best_acc:
+                if running_loss<best_loss and acc>best_acc:
                     best_acc=acc
                     torch.save(model.state_dict(), PATH)
                     
@@ -131,7 +132,7 @@ def main():
     if sys.argv[1]=='train':
         trainloader=preprocessing("train")
         testloader=preprocessing("test")
-        train(EPOCH=EPOCH,trainloader=trainloader,testloader=testloader)
+        train(EPOCH=EPOCH,trainloader=trainloader,testloader=testloader,LR=0.01)
     elif sys.argv[1]=='test':
         testloader=preprocessing("test")
         validate(testloader)
