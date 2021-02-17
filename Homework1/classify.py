@@ -2,7 +2,7 @@
 '''
 Author: Minghao Chen
 Date: 2021-02-08 17:40:52
-LastEditTime: 2021-02-18 00:07:07
+LastEditTime: 2021-02-18 00:21:25
 LastEditors: Please set LastEditors
 Description: EECE7398 Homework1: train a classifier
 FilePath: \EECE7398ADL\Homework1\Homework1.py
@@ -151,7 +151,7 @@ def main():
         trainloader=preprocessing("train")
         testloader=preprocessing("test")
         train(EPOCH=EPOCH,trainloader=trainloader,testloader=testloader,LR=0.01)
-    elif sys.argv[1]=='test':
+    elif sys.argv[1]=='test' or 'predict':
         test(sys.argv[2])
     else:
         print('wrong parameter')
