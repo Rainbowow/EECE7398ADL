@@ -2,7 +2,7 @@
 '''
 Author: Minghao Chen
 Date: 2021-02-08 17:40:52
-LastEditTime: 2021-02-17 23:42:59
+LastEditTime: 2021-02-18 00:02:55
 LastEditors: Please set LastEditors
 Description: EECE7398 Homework1: train a classifier
 FilePath: \EECE7398ADL\Homework1\Homework1.py
@@ -17,8 +17,6 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.optim as optim
 import sys
-
-
 
 def preprocessing(train_test):
     '''
@@ -43,7 +41,16 @@ def preprocessing(train_test):
     return loader
 
 def train(EPOCH,trainloader,testloader,LR):
-    
+    '''
+    description: training deep model. Saving in path stored in utils.py
+    param {
+        EPOCH,
+        trainloader:to provide training data. A pytorch dataloader
+        testloader:to provide test data. A pytorch dataloader
+        LR:learning rate
+    }
+    return {*}
+    '''
     model=Net()
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LR)
@@ -111,7 +118,14 @@ def train(EPOCH,trainloader,testloader,LR):
                 test_running_count=0
     print('train finished')
 
-def validate(img_path):
+def test(img_path):
+    '''
+    description: to test single picture. Print the result in consule.
+    param {
+        img_path: image file path
+    }
+    return {*}
+    '''
     transform = transforms.Compose(
         [transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]) #C*H*W
@@ -127,12 +141,17 @@ def validate(img_path):
     print('Predicted: ', ' '.join('%5s' % classes[predicted]))
 
 def main():
+    '''
+    description: main function. Program starts here.
+    param {*}
+    return {*}
+    '''
     if sys.argv[1]=='train':
         trainloader=preprocessing("train")
         testloader=preprocessing("test")
         train(EPOCH=EPOCH,trainloader=trainloader,testloader=testloader,LR=0.01)
     elif sys.argv[1]=='test':
-        validate(sys.argv[2])
+        test(sys.argv[2])
     else:
         print('wrong parameter')
 
