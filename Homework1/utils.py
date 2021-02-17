@@ -1,10 +1,7 @@
 # -*- coding:utf-8 -*-
 
-import matplotlib.pyplot as plt
-import numpy as np
-
-def imshow(img):
-    img = img / 2 + 0.5     # unnormalize
-    npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.show()
+#hyper parameters
+PATH = './model/cifar_net_LR_0.01.pth'
+classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+BATCH_SIZE=64
+EPOCH=10
