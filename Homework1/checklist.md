@@ -11,5 +11,5 @@ Last edit 02/13/2021
 - [x] change model saving strategy
 - [x] comment code
 - [x] figure out the tensor figure in preprocess
-- [ ] modularize whole project
+- [x] modularize whole project
 - [x] add parameters to all functions
