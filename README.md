@@ -9,3 +9,10 @@ In this homework you will practice to write a Neural Network classifier in Pytho
 
 - To implement and understand a Neural Network classifier. 
 - Get familiar with using pytorch  
+
+### Homework1 Usage
+
+run "python classify.py train" to train a model
+
+run "python classify.py test xxx.png" to test any picture sized (32,32,3)
+
