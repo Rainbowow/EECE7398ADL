@@ -2,7 +2,7 @@
 '''
 Author: Minghao Chen
 Date: 2021-02-08 17:40:52
-LastEditTime: 2021-02-18 00:05:48
+LastEditTime: 2021-02-18 00:07:07
 LastEditors: Please set LastEditors
 Description: EECE7398 Homework1: train a classifier
 FilePath: \EECE7398ADL\Homework1\Homework1.py
@@ -57,6 +57,7 @@ def train(EPOCH,trainloader,testloader,LR):
 
     #training
     print_format="{0:<6}{1:<12.4f}{2:<12.4f}{3:<11.4f}{4:<10.4f}" #format accuracy output
+    
     #modified from pytorch.org tutorials
     for epoch in range(EPOCH):  # loop over the dataset multiple times
 
