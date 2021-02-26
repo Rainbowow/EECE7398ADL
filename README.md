@@ -16,3 +16,14 @@ run "python classify.py train" to train a model
 
 run "python classify.py test xxx.png" to test any picture sized (32,32,3)
 
+## Homework2
+
+### Description
+
+### In this homework you will practice how to write a Convolutional Neural Network (CNN) classifier
+in Python with the Pytorch framework. You need to understand how a CNN works, including
+backpropagation and gradient descent in order to implement this homework successfully. The goal
+of this homework is:
+
+- To implement and understand the CNN architecture.  
+
